@@ -85,6 +85,14 @@ input[type=text] { margin-bottom: 16px; }
 .promo-number { display: block; font-size: 22px; font-weight: 700; color: #e87722; margin-bottom: 4px; }
 .promo-desc { font-size: 12px; color: #666; line-height: 1.5; }
 .promo-divider { width: 1px; background: #eee; align-self: stretch; flex-shrink: 0; }
+
+.sign-promo { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 16px; margin-top: 16px; }
+.sign-thumb { width: 140px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.sign-text { flex: 1; }
+.sign-heading { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.sign-sub { font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 8px; }
+.sign-link { font-size: 12px; color: #e87722; font-weight: 600; text-decoration: none; }
+.sign-link:hover { text-decoration: underline; }
   
 @media (max-width: 600px) {
   body { padding: 20px 14px 40px; }
@@ -100,6 +108,9 @@ input[type=text] { margin-bottom: 16px; }
   .email-submit { width: 100%; padding: 11px; }
   .promo-inner { flex-direction: column; gap: 16px; }
   .promo-divider { width: 100%; height: 1px; }
+  .sign-promo { flex-direction: column; }
+  .sign-thumb { width: 100%; height: 100px; }
+  
 }
 </style>
 </head>
@@ -148,9 +159,16 @@ input[type=text] { margin-bottom: 16px; }
     </div>
   </div>
 </div>
-  <a href="https://www.quickfeedback.ai/qr-sign" target="_blank" style="display:block; margin-top:16px;">
-    <img src="https://cdn.quickfeedback.ai/blog/free-qr-sign-banner.jpg" alt="Get a free printed QR feedback sign with any yearly plan" style="width:100%; border-radius:12px; display:block;" />
-  </a>
+
+<div class="sign-promo" id="signPromo">
+  <img class="sign-thumb" src="https://cdn.quickfeedback.ai/blog/free-qr-signs.jpg" alt="Free custom QR feedback sign" />
+  <div class="sign-text">
+    <p class="sign-heading">🎁 Free custom QR sign with any yearly plan</p>
+    <p class="sign-sub">Place it on tables, counters or receipts to collect private feedback before it becomes a bad review.</p>
+    <a class="sign-link" href="https://www.quickfeedback.ai/qr-sign" target="_blank">See sign options →</a>
+  </div>
+</div>
+  
   <div class="loading" id="loading">
     <div class="spinner"></div>
     <span>Writing your reply...</span>
