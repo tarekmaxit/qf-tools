@@ -234,12 +234,14 @@ document.querySelectorAll('.tone').forEach(b => {
 
 function showForm() {
   document.getElementById('formSection').style.display = 'block';
+  document.getElementById('examplesSection').style.display = 'block';
   document.getElementById('resultCard').style.display = 'none';
   document.getElementById('loading').style.display = 'none';
 }
 
 function hideForm() {
   document.getElementById('formSection').style.display = 'none';
+  document.getElementById('examplesSection').style.display = 'none';
 }
 
 async function generate() {
