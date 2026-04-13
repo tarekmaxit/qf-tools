@@ -135,19 +135,21 @@ input[type=text] { margin-bottom: 16px; }
 
     <button class="reset-btn" onclick="resetForm()">Reply to another review</button>
 
-    <div class="email-capture" id="emailCapture">
-      <p class="email-capture-heading">Get free review tips and tools like this</p>
-      <p class="email-capture-sub">Join business owners getting weekly tips on reviews, reputation, and customer feedback.</p>
-      <div class="email-row">
-        <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
-        <button class="email-submit" id="emailSubmit" onclick="subscribeEmail()">Get free tips</button>
-      </div>
-      <p class="email-success" id="emailSuccess">You're in! Check your inbox.</p>
-      <p class="privacy">No spam. Unsubscribe anytime.</p>
+<div class="bottom-row">
+  <div class="email-capture" id="emailCapture">
+    <p class="email-capture-heading">Get free review tips</p>
+    <p class="email-capture-sub">Weekly tips on reviews and reputation.</p>
+    <div class="email-row">
+      <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
+      <button class="email-submit" id="emailSubmit" onclick="subscribeEmail()">Subscribe</button>
     </div>
+    <p class="email-success" id="emailSuccess">You're in! Check your inbox.</p>
+    <p class="privacy">No spam. Unsubscribe anytime.</p>
+  </div>
 
-    <p class="share-label">Share this free tool</p>
-    <div class="share-row">
+  <div class="share-side">
+    <p class="share-label">Share this tool</p>
+    <div class="share-col">
       <a class="share-btn x" id="shareX" href="#" target="_blank">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         Share on X
@@ -161,6 +163,10 @@ input[type=text] { margin-bottom: 16px; }
         Share on Facebook
       </a>
     </div>
+  </div>
+</div>
+
+
 
     <div class="upsell">
       <p class="upsell-heading">Tired of replying manually to every review?</p>
