@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f9; color: #1a1a1a; padding: 32px 20px 48px; }
+.inner { max-width: 640px; margin: 0 auto; }
+label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
+input[type=text], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fff; transition: border-color 0.15s; -webkit-appearance: none; }
+input[type=text]:focus, textarea:focus { outline: none; border-color: #e87722; box-shadow: 0 0 0 3px rgba(232,119,34,0.1); }
+textarea { min-height: 110px; resize: vertical; margin-bottom: 16px; }
+input[type=text] { margin-bottom: 16px; }
+.card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.tone-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.tone { padding: 6px 12px; border-radius: 50px; border: 1px solid #ddd; background: #fff; font-size: 13px; color: #555; cursor: pointer; transition: all 0.12s; font-family: inherit; white-space: nowrap; }
+.tone:hover { border-color: #e87722; color: #e87722; }
+.tone.on { background: #e87722; border-color: #e87722; color: #fff; font-weight: 500; }
+.gen-btn { width: 100%; padding: 14px; background: #e87722; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+.gen-btn:hover { opacity: 0.9; }
+.gen-btn:disabled { opacity: 0.5; cursor: default; }
+.error { color: #c0392b; font-size: 13px; margin-top: 10px; display: none; background: #fdf0f0; padding: 8px 12px; border-radius: 6px; border: 1px solid #f5c6c6; }
+.loading { display: none; align-items: center; gap: 10px; padding: 40px 0; color: #666; font-size: 14px; justify-content: center; }
+.spinner { width: 20px; height: 20px; border: 2px solid #eee; border-top-color: #e87722; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result-card { display: none; background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; margin-top: 4px; }
+.result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.result-label { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+.result-actions { display: flex; gap: 8px; }
+.icon-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; border: 1px solid #ddd; background: #f5f5f5; font-size: 13px; color: #555; cursor: pointer; font-family: inherit; transition: all 0.12s; white-space: nowrap; }
+.icon-btn:hover { border-color: #e87722; color: #e87722; background: #fff4ee; }
+.icon-btn.copied { color: #2d8a4e; border-color: #2d8a4e; background: #f0faf4; }
+.icon-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+.result-text { font-size: 14px; line-height: 1.75; color: #333; white-space: pre-wrap; background: #f9f9f9; padding: 14px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 16px; }
+.action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.reset-btn { flex: 1; min-width: 140px; padding: 11px; background: #fff; color: #555; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.reset-btn:hover { border-color: #e87722; color: #e87722; }
+
+.share-label { font-size: 12px; color: #999; margin-bottom: 6px; }
+.share-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.share-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.12s; text-decoration: none; white-space: nowrap; }
+.share-btn.x { border-color: #000; color: #000; }
+.share-btn.x:hover { background: #000; color: #fff; }
+.share-btn.li { border-color: #0077b5; color: #0077b5; }
+.share-btn.li:hover { background: #0077b5; color: #fff; }
+.share-btn.fb { border-color: #1877f2; color: #1877f2; }
+.share-btn.fb:hover { background: #1877f2; color: #fff; }
+
+.upsell { background: linear-gradient(135deg, #fff8f4 0%, #fff4ee 100%); border: 1px solid #f5bfa0; border-radius: 12px; padding: 20px; }
+.upsell-heading { font-size: 15px; font-weight: 600; color: #7a3010; margin-bottom: 6px; }
+.upsell-sub { font-size: 13px; color: #9a4010; line-height: 1.6; margin-bottom: 16px; }
+.upsell-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.upsell-demo { display: inline-block; padding: 10px 20px; border-radius: 8px; border: 1.5px solid #e87722; color: #e87722; font-size: 13px; font-weight: 600; text-decoration: none; text-align: center; transition: all 0.12s; white-space: nowrap; background: #fff; }
+.upsell-demo:hover { background: #fff4ee; }
+.upsell-trial { display: inline-block; padding: 10px 20px; border-radius: 8px; background: #e87722; color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; text-align: center; transition: opacity 0.12s; white-space: nowrap; }
+.upsell-trial:hover { opacity: 0.9; }
+
+@media (max-width: 480px) {
+  body { padding: 20px 16px 40px; }
+  .tone-row { gap: 6px; }
+  .tone { font-size: 12px; padding: 5px 10px; }
+  .action-row { flex-direction: column; }
+  .reset-btn { min-width: unset; }
+  .share-row { gap: 6px; }
+  .share-btn { font-size: 12px; padding: 6px 10px; }
+  .upsell-btns { flex-direction: column; }
+  .upsell-demo, .upsell-trial { text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="inner">
+
+  <div id="formSection">
+    <div class="card">
+      <label>Paste the customer review</label>
+      <textarea id="reviewInput" placeholder="e.g. Great food but the wait was too long and our server forgot our drinks..."></textarea>
+
+      <label>Your business name (optional)</label>
+      <input type="text" id="bizNameInput" placeholder="e.g. The Corner Cafe" />
+
+      <label>Reply tone</label>
+      <div class="tone-row">
+        <button class="tone on" data-t="professional">Professional</button>
+        <button class="tone" data-t="warm">Warm and personal</button>
+        <button class="tone" data-t="concise">Short and concise</button>
+        <button class="tone" data-t="apologetic">Apologetic</button>
+      </div>
+
+      <button class="gen-btn" id="genBtn" onclick="generate()">Generate reply</button>
+      <p class="error" id="errMsg"></p>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <span>Writing your reply...</span>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-header">
+      <span class="result-label" id="resultLabel">Your reply</span>
+      <div class="result-actions">
+        <button class="icon-btn" id="copyBtn" onclick="copyReply()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span id="copyLabel">Copy</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="result-text" id="resultText"></div>
+
+    <div class="action-row">
+      <button class="reset-btn" onclick="resetForm()">Reply to another review</button>
+    </div>
+
+    <p class="share-label">Share this free tool</p>
+    <div class="share-row">
+      <a class="share-btn x" id="shareX" href="#" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Share on X
+      </a>
+      <a class="share-btn li" id="shareLI" href="#" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        Share on LinkedIn
+      </a>
+      <a class="share-btn fb" id="shareFB" href="#" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Share on Facebook
+      </a>
+    </div>
+
+    <div class="upsell">
+      <p class="upsell-heading">Replying helps. Preventing is better.</p>
+      <p class="upsell-sub">QuickFeedback lets customers share private feedback before they leave a public review — so you fix issues before they go public and protect your reputation automatically.</p>
+      <div class="upsell-btns">
+        <a class="upsell-demo" href="https://www.quickfeedback.ai/demo" target="_blank">See how it works</a>
+        <a class="upsell-trial" href="https://app.quickfeedback.ai/sign-up" target="_blank">Start free trial</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<script>
+let selectedTone = 'professional';
+let replyText = '';
+const PAGE_URL = 'https://www.quickfeedback.ai/google-review-reply-generator';
+const SHARE_TEXT = 'Just used this free AI tool to reply to Google reviews instantly. Saves so much time!';
+
+const toneLabels = {
+  professional: 'Your professional reply',
+  warm: 'Your warm and personal reply',
+  concise: 'Your short and concise reply',
+  apologetic: 'Your apologetic reply'
+};
+
+document.querySelectorAll('.tone').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tone').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    selectedTone = b.dataset.t;
+  });
+});
+
+function showForm() {
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('loading').style.display = 'none';
+}
+
+function hideForm() {
+  document.getElementById('formSection').style.display = 'none';
+}
+
+async function generate() {
+  const review = document.getElementById('reviewInput').value.trim();
+  const bizName = document.getElementById('bizNameInput').value.trim();
+  const errMsg = document.getElementById('errMsg');
+  const genBtn = document.getElementById('genBtn');
+
+  if (!review) {
+    errMsg.textContent = 'Please paste a customer review first.';
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  errMsg.style.display = 'none';
+  genBtn.disabled = true;
+  hideForm();
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('resultCard').style.display = 'none';
+
+  window.parent.postMessage({
+    type: 'generate-reply',
+    review, tone: selectedTone, bizName
+  }, '*');
+}
+
+function resetForm() {
+  document.getElementById('reviewInput').value = '';
+  document.getElementById('bizNameInput').value = '';
+  document.getElementById('errMsg').style.display = 'none';
+  document.getElementById('genBtn').disabled = false;
+  document.querySelectorAll('.tone').forEach(x => x.classList.remove('on'));
+  document.querySelector('[data-t="professional"]').classList.add('on');
+  selectedTone = 'professional';
+  replyText = '';
+  showForm();
+}
+
+function copyReply() {
+  const label = document.getElementById('copyLabel');
+  const btn = document.getElementById('copyBtn');
+  const el = document.createElement('textarea');
+  el.value = replyText;
+  el.setAttribute('readonly', '');
+  el.style.cssText = 'position:absolute;left:-9999px;top:0;';
+  document.body.appendChild(el);
+  el.setSelectionRange(0, el.value.length);
+  el.select();
+  try {
+    document.execCommand('copy');
+    label.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      label.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  } catch(e) {}
+  document.body.removeChild(el);
+}
+
+function updateShareLinks() {
+  const xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(PAGE_URL);
+  const liUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(PAGE_URL);
+  const fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(PAGE_URL);
+  document.getElementById('shareX').href = xUrl;
+  document.getElementById('shareLI').href = liUrl;
+  document.getElementById('shareFB').href = fbUrl;
+}
+
+updateShareLinks();
+
+function resizeIframe() {
+  const height = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'resize', height }, '*');
+}
+
+const resizeObserver = new ResizeObserver(() => resizeIframe());
+resizeObserver.observe(document.body);
+resizeIframe();
+
+window.addEventListener('message', (event) => {
+  const loading = document.getElementById('loading');
+  const resultCard = document.getElementById('resultCard');
+  const resultText = document.getElementById('resultText');
+  const errMsg = document.getElementById('errMsg');
+
+  if (event.data.type === 'reply-result') {
+    loading.style.display = 'none';
+    if (event.data.error) {
+      showForm();
+      document.getElementById('genBtn').disabled = false;
+      errMsg.textContent = event.data.error;
+      errMsg.style.display = 'block';
+    } else {
+      replyText = event.data.reply;
+      resultText.textContent = event.data.reply;
+      document.getElementById('resultLabel').textContent = toneLabels[selectedTone] || 'Your reply';
+      resultCard.style.display = 'block';
+    }
+  }
+});
+</script>
+</body>
+</html>
