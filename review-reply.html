@@ -41,7 +41,8 @@ input[type=text] { margin-bottom: 16px; }
 .reset-btn { width: 100%; padding: 12px; background: #fff; color: #e87722; border: 2px solid #e87722; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; margin-bottom: 16px; }
 .reset-btn:hover { background: #fff4ee; }
 
-.email-capture { background: #f0f7ff; border: 1px solid #c8dff5; border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+.bottom-row { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+.email-capture { flex: 1; background: #f0f7ff; border: 1px solid #c8dff5; border-radius: 12px; padding: 18px 20px; margin-bottom: 0; }
 .email-capture-heading { font-size: 14px; font-weight: 600; color: #0c447c; margin-bottom: 4px; }
 .email-capture-sub { font-size: 12px; color: #185fa5; margin-bottom: 12px; line-height: 1.5; }
 .email-row { display: flex; gap: 8px; }
@@ -53,8 +54,9 @@ input[type=text] { margin-bottom: 16px; }
 .email-success { display: none; font-size: 13px; color: #2d8a4e; font-weight: 500; margin-top: 8px; }
 .privacy { font-size: 11px; color: #888; margin-top: 8px; }
 
-.share-label { font-size: 12px; color: #999; margin-bottom: 6px; }
-.share-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.share-side { flex-shrink: 0; width: 160px; }
+.share-label { font-size: 12px; color: #999; margin-bottom: 8px; }
+.share-col { display: flex; flex-direction: column; gap: 8px; }
 .share-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1px solid #ddd; background: #fff; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.12s; text-decoration: none; white-space: nowrap; }
 .share-btn.x { border-color: #000; color: #000; }
 .share-btn.x:hover { background: #000; color: #fff; }
@@ -76,8 +78,9 @@ input[type=text] { margin-bottom: 16px; }
   body { padding: 20px 14px 40px; }
   .tone-row { gap: 6px; }
   .tone { font-size: 12px; padding: 5px 10px; }
-  .share-row { gap: 6px; }
-  .share-btn { font-size: 12px; padding: 6px 10px; }
+  .bottom-row { flex-direction: column; }
+  .share-side { width: 100%; }
+  .share-col { flex-direction: row; flex-wrap: wrap; gap: 8px; }
   .upsell-btns { flex-direction: column; }
   .upsell-demo, .upsell-trial { text-align: center; width: 100%; }
   .email-row { flex-direction: column; }
@@ -93,15 +96,20 @@ input[type=text] { margin-bottom: 16px; }
       <label>Paste the customer review</label>
       <textarea id="reviewInput" placeholder="e.g. Great food but the wait was too long and our server forgot our drinks..."></textarea>
 
-      <label>Your business name (optional)</label>
-      <input type="text" id="bizNameInput" placeholder="e.g. The Corner Cafe" />
-
-      <label>Reply tone</label>
-      <div class="tone-row">
-        <button class="tone on" data-t="professional">Professional</button>
-        <button class="tone" data-t="warm">Warm and personal</button>
-        <button class="tone" data-t="concise">Short and concise</button>
-        <button class="tone" data-t="apologetic">Apologetic</button>
+      <div class="form-row">
+        <div class="form-col">
+          <label>Your business name (optional)</label>
+          <input type="text" id="bizNameInput" placeholder="e.g. The Corner Cafe" />
+        </div>
+        <div class="form-col">
+          <label>Reply tone</label>
+          <div class="tone-row">
+            <button class="tone on" data-t="professional">Professional</button>
+            <button class="tone" data-t="warm">Warm and personal</button>
+            <button class="tone" data-t="concise">Short and concise</button>
+            <button class="tone" data-t="apologetic">Apologetic</button>
+          </div>
+        </div>
       </div>
 
       <button class="gen-btn" id="genBtn" onclick="generate()">Generate reply</button>
@@ -135,38 +143,36 @@ input[type=text] { margin-bottom: 16px; }
 
     <button class="reset-btn" onclick="resetForm()">Reply to another review</button>
 
-<div class="bottom-row">
-  <div class="email-capture" id="emailCapture">
-    <p class="email-capture-heading">Get free review tips</p>
-    <p class="email-capture-sub">Weekly tips on reviews and reputation.</p>
-    <div class="email-row">
-      <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
-      <button class="email-submit" id="emailSubmit" onclick="subscribeEmail()">Subscribe</button>
+    <div class="bottom-row">
+      <div class="email-capture" id="emailCapture">
+        <p class="email-capture-heading">Get free review tips</p>
+        <p class="email-capture-sub">Weekly tips on reviews and reputation.</p>
+        <div class="email-row">
+          <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
+          <button class="email-submit" id="emailSubmit" onclick="subscribeEmail()">Subscribe</button>
+        </div>
+        <p class="email-success" id="emailSuccess">You're in! Check your inbox.</p>
+        <p class="privacy">No spam. Unsubscribe anytime.</p>
+      </div>
+
+      <div class="share-side">
+        <p class="share-label">Share this tool</p>
+        <div class="share-col">
+          <a class="share-btn x" id="shareX" href="#" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Share on X
+          </a>
+          <a class="share-btn li" id="shareLI" href="#" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Share on LinkedIn
+          </a>
+          <a class="share-btn fb" id="shareFB" href="#" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Share on Facebook
+          </a>
+        </div>
+      </div>
     </div>
-    <p class="email-success" id="emailSuccess">You're in! Check your inbox.</p>
-    <p class="privacy">No spam. Unsubscribe anytime.</p>
-  </div>
-
-  <div class="share-side">
-    <p class="share-label">Share this tool</p>
-    <div class="share-col">
-      <a class="share-btn x" id="shareX" href="#" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Share on X
-      </a>
-      <a class="share-btn li" id="shareLI" href="#" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        Share on LinkedIn
-      </a>
-      <a class="share-btn fb" id="shareFB" href="#" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Share on Facebook
-      </a>
-    </div>
-  </div>
-</div>
-
-
 
     <div class="upsell">
       <p class="upsell-heading">Tired of replying manually to every review?</p>
@@ -185,8 +191,6 @@ let selectedTone = 'professional';
 let replyText = '';
 const PAGE_URL = 'https://www.quickfeedback.ai/google-review-reply-generator';
 const SHARE_TEXT = 'Just used this free AI tool to reply to Google reviews instantly. Saves so much time!';
-const MAILERLITE_API_KEY = 'YOUR_MAILERLITE_API_KEY';
-const MAILERLITE_GROUP_ID = 'YOUR_MAILERLITE_GROUP_ID';
 
 const toneLabels = {
   professional: 'Your professional reply',
@@ -250,6 +254,9 @@ function resetForm() {
   document.getElementById('emailSuccess').style.display = 'none';
   document.getElementById('emailCapture').style.display = 'block';
   document.getElementById('emailSubmit').disabled = false;
+  document.getElementById('emailSubmit').textContent = 'Subscribe';
+  document.getElementById('emailSubmit').style.display = '';
+  document.getElementById('emailInput').style.display = '';
   document.querySelectorAll('.tone').forEach(x => x.classList.remove('on'));
   document.querySelector('[data-t="professional"]').classList.add('on');
   selectedTone = 'professional';
@@ -292,10 +299,7 @@ async function subscribeEmail() {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Subscribing...';
 
-  window.parent.postMessage({
-    type: 'subscribe-email',
-    email
-  }, '*');
+  window.parent.postMessage({ type: 'subscribe-email', email }, '*');
 
   setTimeout(() => {
     submitBtn.style.display = 'none';
