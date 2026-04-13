@@ -195,6 +195,7 @@ async function generate() {
   const bizName = document.getElementById('bizNameInput').value.trim();
   const errMsg = document.getElementById('errMsg');
   const genBtn = document.getElementById('genBtn');
+  const browserInfo = `Device: ${/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'} | Language: ${navigator.language || 'unknown'} | Screen: ${window.screen.width}x${window.screen.height} | Platform: ${navigator.platform || 'unknown'}`;
 
   if (!review) {
     errMsg.textContent = 'Please paste a customer review first.';
@@ -208,10 +209,10 @@ async function generate() {
   document.getElementById('loading').style.display = 'flex';
   document.getElementById('resultCard').style.display = 'none';
 
-  window.parent.postMessage({
-    type: 'generate-reply',
-    review, tone: selectedTone, bizName
-  }, '*');
+window.parent.postMessage({
+  type: 'generate-reply',
+  review, tone: selectedTone, bizName, browserInfo
+}, '*');
 }
 
 function resetForm() {
