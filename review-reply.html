@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ffffff; color: #1a1a1a; padding: 24px 20px 24px; overflow: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ffffff; color: #1a1a1a; padding: 24px 20px 48px; overflow: hidden; -webkit-text-size-adjust: 100%; }
 .inner { max-width: 640px; margin: 0 auto; }
 label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
-input[type=text], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fff; transition: border-color 0.15s; -webkit-appearance: none; }
-input[type=text]:focus, textarea:focus { outline: none; border-color: #e87722; box-shadow: 0 0 0 3px rgba(232,119,34,0.1); }
+input[type=text], input[type=email], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fff; transition: border-color 0.15s; -webkit-appearance: none; }
+input[type=text]:focus, input[type=email]:focus, textarea:focus { outline: none; border-color: #e87722; box-shadow: 0 0 0 3px rgba(232,119,34,0.1); }
 textarea { min-height: 110px; resize: vertical; margin-bottom: 16px; }
 input[type=text] { margin-bottom: 16px; }
 .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
@@ -37,11 +37,21 @@ input[type=text] { margin-bottom: 16px; }
 .icon-btn:hover { border-color: #e87722; color: #e87722; background: #fff4ee; }
 .icon-btn.copied { color: #2d8a4e; border-color: #2d8a4e; background: #f0faf4; }
 .icon-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-
 .result-text { font-size: 14px; line-height: 1.75; color: #333; white-space: pre-wrap; background: #fff; padding: 14px 14px 14px 18px; border-radius: 8px; border: 1px solid #eee; border-left: 3px solid #e87722; margin-bottom: 16px; }
-
 .reset-btn { width: 100%; padding: 12px; background: #fff; color: #e87722; border: 2px solid #e87722; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; margin-bottom: 16px; }
 .reset-btn:hover { background: #fff4ee; }
+
+.email-capture { background: #f0f7ff; border: 1px solid #c8dff5; border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+.email-capture-heading { font-size: 14px; font-weight: 600; color: #0c447c; margin-bottom: 4px; }
+.email-capture-sub { font-size: 12px; color: #185fa5; margin-bottom: 12px; line-height: 1.5; }
+.email-row { display: flex; gap: 8px; }
+.email-input { flex: 1; padding: 9px 12px; border: 1px solid #c8dff5; border-radius: 8px; font-size: 13px; font-family: inherit; color: #1a1a1a; background: #fff; outline: none; min-width: 0; }
+.email-input:focus { border-color: #185fa5; }
+.email-submit { padding: 9px 16px; background: #185fa5; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s; }
+.email-submit:hover { opacity: 0.9; }
+.email-submit:disabled { opacity: 0.5; cursor: default; }
+.email-success { display: none; font-size: 13px; color: #2d8a4e; font-weight: 500; margin-top: 8px; }
+.privacy { font-size: 11px; color: #888; margin-top: 8px; }
 
 .share-label { font-size: 12px; color: #999; margin-bottom: 6px; }
 .share-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -63,21 +73,15 @@ input[type=text] { margin-bottom: 16px; }
 .upsell-trial:hover { opacity: 0.9; }
 
 @media (max-width: 600px) {
-  body { padding: 20px 14px 40px; overflow: hidden; }
+  body { padding: 20px 14px 40px; }
   .tone-row { gap: 6px; }
   .tone { font-size: 12px; padding: 5px 10px; }
   .share-row { gap: 6px; }
   .share-btn { font-size: 12px; padding: 6px 10px; }
   .upsell-btns { flex-direction: column; }
   .upsell-demo, .upsell-trial { text-align: center; width: 100%; }
-  .result-text { font-size: 13px; }
-  .gen-btn { font-size: 14px; padding: 13px; }
-}
-
-@media (max-width: 380px) {
-  .share-row { flex-direction: column; }
-  .share-btn { justify-content: center; }
-  .tone { font-size: 11px; padding: 4px 9px; }
+  .email-row { flex-direction: column; }
+  .email-submit { width: 100%; padding: 11px; }
 }
 </style>
 </head>
@@ -131,6 +135,17 @@ input[type=text] { margin-bottom: 16px; }
 
     <button class="reset-btn" onclick="resetForm()">Reply to another review</button>
 
+    <div class="email-capture" id="emailCapture">
+      <p class="email-capture-heading">Get free review tips and tools like this</p>
+      <p class="email-capture-sub">Join business owners getting weekly tips on reviews, reputation, and customer feedback.</p>
+      <div class="email-row">
+        <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
+        <button class="email-submit" id="emailSubmit" onclick="subscribeEmail()">Get free tips</button>
+      </div>
+      <p class="email-success" id="emailSuccess">You're in! Check your inbox.</p>
+      <p class="privacy">No spam. Unsubscribe anytime.</p>
+    </div>
+
     <p class="share-label">Share this free tool</p>
     <div class="share-row">
       <a class="share-btn x" id="shareX" href="#" target="_blank">
@@ -148,11 +163,11 @@ input[type=text] { margin-bottom: 16px; }
     </div>
 
     <div class="upsell">
-      <p class="upsell-heading">Replying helps. Preventing is better.</p>
-      <p class="upsell-sub">QuickFeedback lets customers share private feedback before they leave a public review — so you fix issues before they go public and protect your reputation automatically.</p>
+      <p class="upsell-heading">Tired of replying manually to every review?</p>
+      <p class="upsell-sub">QuickFeedback catches bad reviews before they go public — so you spend less time on damage control and more time growing.</p>
       <div class="upsell-btns">
-        <a class="upsell-demo" href="https://www.quickfeedback.ai/demo" target="_blank">See how it works</a>
-        <a class="upsell-trial" href="https://app.quickfeedback.ai/sign-up" target="_blank">Start free trial</a>
+        <a class="upsell-demo" href="https://www.quickfeedback.ai/demo" target="_blank">Try the live demo — 30 sec, no login</a>
+        <a class="upsell-trial" href="https://app.quickfeedback.ai/sign-up" target="_blank">Start free — no card needed</a>
       </div>
     </div>
 
@@ -164,6 +179,8 @@ let selectedTone = 'professional';
 let replyText = '';
 const PAGE_URL = 'https://www.quickfeedback.ai/google-review-reply-generator';
 const SHARE_TEXT = 'Just used this free AI tool to reply to Google reviews instantly. Saves so much time!';
+const MAILERLITE_API_KEY = 'YOUR_MAILERLITE_API_KEY';
+const MAILERLITE_GROUP_ID = 'YOUR_MAILERLITE_GROUP_ID';
 
 const toneLabels = {
   professional: 'Your professional reply',
@@ -195,7 +212,9 @@ async function generate() {
   const bizName = document.getElementById('bizNameInput').value.trim();
   const errMsg = document.getElementById('errMsg');
   const genBtn = document.getElementById('genBtn');
-  const browserInfo = `Device: ${/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'} | Language: ${navigator.language || 'unknown'} | Screen: ${window.screen.width}x${window.screen.height} | Platform: ${navigator.platform || 'unknown'}`;
+  const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+  const language = navigator.language || 'unknown';
+  const browserInfo = `Device: ${device} | Language: ${language} | Screen: ${window.screen.width}x${window.screen.height}`;
 
   if (!review) {
     errMsg.textContent = 'Please paste a customer review first.';
@@ -209,10 +228,10 @@ async function generate() {
   document.getElementById('loading').style.display = 'flex';
   document.getElementById('resultCard').style.display = 'none';
 
-window.parent.postMessage({
-  type: 'generate-reply',
-  review, tone: selectedTone, bizName, browserInfo
-}, '*');
+  window.parent.postMessage({
+    type: 'generate-reply',
+    review, tone: selectedTone, bizName, browserInfo
+  }, '*');
 }
 
 function resetForm() {
@@ -221,6 +240,10 @@ function resetForm() {
   document.getElementById('errMsg').style.display = 'none';
   document.getElementById('genBtn').disabled = false;
   document.getElementById('successBanner').style.display = 'none';
+  document.getElementById('emailInput').value = '';
+  document.getElementById('emailSuccess').style.display = 'none';
+  document.getElementById('emailCapture').style.display = 'block';
+  document.getElementById('emailSubmit').disabled = false;
   document.querySelectorAll('.tone').forEach(x => x.classList.remove('on'));
   document.querySelector('[data-t="professional"]').classList.add('on');
   selectedTone = 'professional';
@@ -250,6 +273,31 @@ function copyReply() {
   document.body.removeChild(el);
 }
 
+async function subscribeEmail() {
+  const email = document.getElementById('emailInput').value.trim();
+  const submitBtn = document.getElementById('emailSubmit');
+  const successMsg = document.getElementById('emailSuccess');
+
+  if (!email || !email.includes('@')) {
+    document.getElementById('emailInput').style.borderColor = '#c0392b';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Subscribing...';
+
+  window.parent.postMessage({
+    type: 'subscribe-email',
+    email
+  }, '*');
+
+  setTimeout(() => {
+    submitBtn.style.display = 'none';
+    document.getElementById('emailInput').style.display = 'none';
+    successMsg.style.display = 'block';
+  }, 800);
+}
+
 function updateShareLinks() {
   const xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(PAGE_URL);
   const liUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(PAGE_URL);
@@ -260,7 +308,6 @@ function updateShareLinks() {
 }
 
 updateShareLinks();
-
 
 window.addEventListener('message', (event) => {
   const loading = document.getElementById('loading');
@@ -282,9 +329,7 @@ window.addEventListener('message', (event) => {
       document.getElementById('resultLabel').textContent = toneLabels[selectedTone] || 'Your reply';
       successBanner.style.display = 'flex';
       resultCard.style.display = 'block';
-      setTimeout(() => {
-        successBanner.style.display = 'none';
-      }, 3000);
+      setTimeout(() => { successBanner.style.display = 'none'; }, 3000);
     }
   }
 });
