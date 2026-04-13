@@ -260,14 +260,6 @@ function updateShareLinks() {
 
 updateShareLinks();
 
-function resizeIframe() {
-  const height = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: 'resize', height }, '*');
-}
-
-const resizeObserver = new ResizeObserver(() => resizeIframe());
-resizeObserver.observe(document.body);
-resizeIframe();
 
 window.addEventListener('message', (event) => {
   const loading = document.getElementById('loading');
