@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ffffff; color: #1a1a1a; padding: 24px 20px 48px; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+html, body { touch-action: pan-y; -webkit-overflow-scrolling: touch; }
 .inner { max-width: 860px; margin: 0 auto; }
 label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
 input[type=text], input[type=email], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fff; transition: border-color 0.15s; -webkit-appearance: none; }
@@ -244,6 +247,8 @@ input[type=text] { margin-bottom: 16px; }
 
 </div>
 <script>
+document.addEventListener('touchstart', function() {}, {passive: true});
+document.addEventListener('touchmove', function() {}, {passive: true});  
 let selectedTone = 'professional';
 let replyText = '';
 const PAGE_URL = 'https://www.quickfeedback.ai/google-review-reply-generator';
