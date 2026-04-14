@@ -110,6 +110,10 @@ input[type=text] { margin-bottom: 16px; }
   .promo-divider { width: 100%; height: 1px; }
   .sign-promo { flex-direction: column; }
   .sign-thumb { width: 100%; height: 100px; }
+  .result-text { font-size: 13px; line-height: 1.7; }
+  .reset-btn { font-size: 13px; padding: 11px; }
+  .result-header { margin-bottom: 10px; }
+  .result-card { padding: 16px; }
   
 }
 </style>
@@ -263,6 +267,7 @@ document.querySelectorAll('.tone').forEach(b => {
 function showForm() {
   document.getElementById('formSection').style.display = 'block';
   document.getElementById('examplesSection').style.display = 'block';
+  document.getElementById('signPromo').style.display = 'flex';
   document.getElementById('resultCard').style.display = 'none';
   document.getElementById('loading').style.display = 'none';
 }
@@ -270,6 +275,7 @@ function showForm() {
 function hideForm() {
   document.getElementById('formSection').style.display = 'none';
   document.getElementById('examplesSection').style.display = 'none';
+  document.getElementById('signPromo').style.display = 'none';
 }
 
 async function generate() {
