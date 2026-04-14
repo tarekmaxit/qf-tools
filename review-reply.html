@@ -296,8 +296,11 @@ async function generate() {
   errMsg.style.display = 'none';
   genBtn.disabled = true;
   hideForm();
+  window.scrollTo(0, 0);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
   document.getElementById('loading').style.display = 'flex';
-  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('resultCard').style.display = 'none';  
 
   window.parent.postMessage({
     type: 'generate-reply',
@@ -400,6 +403,8 @@ window.addEventListener('message', (event) => {
       document.getElementById('resultLabel').textContent = toneLabels[selectedTone] || 'Your reply';
       successBanner.style.display = 'flex';
       resultCard.style.display = 'block';
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
       setTimeout(() => { successBanner.style.display = 'none'; }, 3000);
     }
   }
